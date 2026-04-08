@@ -1,22 +1,10 @@
 import React, { useState } from "react";
-import { useEffect } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import useUsers from "../../hooks/useUsers";
 
 const Sales = () => {
-  const fetchUsers = () =>
-    axios
-      .get("https://jsonplaceholder.typicode.com/users")
-      .then((res) => res.data);
-
-  const {
-    data: users,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ["users"],
-    queryFn: fetchUsers,
-  });
+  const { data: users, error, isLoading } = useUsers();
 
   const [name, setName] = useState("");
 
