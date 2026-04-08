@@ -1,23 +1,18 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
+import useTodos from "../../hooks/useTodos";
 
 const Sellers = () => {
-  const [name, setName] = useState("");
-  useEffect(() => {
-    console.log("component mount!");
-    return () => {
-      console.log("component unmount!");
-    };
-  }, [name]);
+  const { data: todos, error, isLoading } = useTodos();
+
   return (
     <>
-      <h3>Admin Sellers Page</h3>
-      <input
-        type="text"
-        onChange={(e) => {
-          setName(e.target.value);
-        }}
-      />
+      <h3>seller page</h3>
+      {isLoading && <h3>Loading...</h3>}
+      {error && <em>{error.message}</em>}
+      {todos?.map((todo) => (
+        <p key={todo.id}>{todo.title}</p>
+      ))}
     </>
   );
 };
