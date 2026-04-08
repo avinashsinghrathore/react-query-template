@@ -1,33 +1,24 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 const Sales = () => {
-  const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState("");
-  const [name, setName] = useState("");
-  useEffect(() => {
-    fetchUsers();
-    // setIsLoading(true);
-    // axios
-    //   .get("https://jsonplaceholder.typicode.com/users")
-    //   .then((res) => setUsers(res.data));
-    // setIsLoading(true);
-    console.log(name);
-  }, []);
+  const fetchUsers = () =>
+    axios
+      .get("https://jsonplaceholder.typicode.com/users")
+      .then((res) => res.data);
 
-  const fetchUsers = async () => {
-    try {
-      setIsLoading(true);
-      const res = await axios.get("https://jsonplaceholder.typicode.com/users");
-      setUsers(res.data);
-      setIsLoading(false);
-    } catch (err) {
-      setErrors(err.message);
-      setIsLoading(false);
-    }
-  };
+  const {
+    data: users,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsers,
+  });
+
+  const [name, setName] = useState("");
 
   // post method
   const addUser = () => {
@@ -80,7 +71,7 @@ const Sales = () => {
     <>
       <h3>Admin Sales Page</h3>
       {isLoading && <h3>Loading...</h3>}
-      {errors && <em>{errors}</em>}
+      {error && <em>{error.message}</em>}
       <input
         type="text"
         onChange={(e) => {
@@ -92,7 +83,7 @@ const Sales = () => {
       <ol>
         <table>
           <tbody>
-            {users.map((user) => (
+            {users?.map((user) => (
               <tr key={user.id}>
                 <td>
                   <li key={user.id}>{user.name}</li>
