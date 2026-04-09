@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 const useFetchUsers = (query) => {
   const fetchTodos = () =>
@@ -17,6 +17,7 @@ const useFetchUsers = (query) => {
     queryFn: fetchTodos,
     gcTime: 900000,
     retry: 5,
+    placeholderData: keepPreviousData,
   });
 };
 

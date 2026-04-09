@@ -20,6 +20,21 @@ const Users = () => {
       {todos?.map((todo) => (
         <p key={todo.id}>{todo.title}</p>
       ))}
+
+      // this code inside div will add page number buttons
+      <div>
+        {Array.from({ length: totalPage }, (_, i) => (
+          <button
+            key={i + 1}
+            onClick={() => {
+              setPage(i + 1);
+            }}
+            style={{ fontWeight: page === i + 1 ? "bold" : "normal" }}
+          >
+            {i + 1}
+          </button>
+        ))}
+      </div>
       <button
         disabled={page === 1}
         onClick={() => {
