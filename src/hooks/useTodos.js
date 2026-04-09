@@ -7,9 +7,13 @@ import { useQuery } from "@tanstack/react-query";
 //     .then((res) => res.data);
 
 const useTodos = (userId) => {
+  const params = {};
+  if (userId) {
+    params.userId = userId;
+  }
   const fetchTodos = () =>
     axios
-      .get(`https://jsonplaceholder.typicode.com/todos`, { params: { userId } })
+      .get(`https://jsonplaceholder.typicode.com/todos`, { params: params })
       .then((res) => res.data);
   // Users/1/todos - refrence
   return useQuery({

@@ -10,6 +10,7 @@ import NotFound from "./components/NotFound/NotFound";
 import SingleProduct from "./components/Products/SingleProduct";
 import Sales from "./components/Admin/Sales";
 import Sellers from "./components/Admin/Sellers";
+import Users from "./components/Admin/Users";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/admin" element={<Admin />}>
             <Route path="sales" element={<Sales />} />
             <Route path="sellers" element={<Sellers />} />
+            <Route path="users" element={<Users />} />
           </Route>
           <Route path="/contactus" element={<ContactUs />} />
           <Route path="*" element={<NotFound />} />
