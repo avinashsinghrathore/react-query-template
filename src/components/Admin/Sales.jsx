@@ -1,28 +1,55 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import useUsers from "../../hooks/useUsers";
 
 const Sales = () => {
   const { data: users, error, isLoading } = useUsers();
+  const QueryClient = useQueryClient();
+
+  // how useMutation hooks works
+  // Post method with - useMutation
+  const addUserMutation = useMutation({
+    mutationFn: (newUser) =>
+      axios
+        .post("https://jsonplaceholder.typicode.com/users", newUser)
+        .then((res) => res.data),
+    onSuccess: (saveduser) => {
+      console.log(saveduser);
+
+      //1st cache invalid
+      // QueryClient.invalidateQueris({
+      //   queryKey: ["users"],
+      // });
+      // 2nd update cache data
+      QueryClient.setQueryData(["users"], (user) => [saveduser, ...user]);
+    },
+  });
 
   const [name, setName] = useState("");
 
   // post method
   const addUser = () => {
     const newUser = { name, id: users.length + 1 };
+
     // console.log(newUser);
-    setUsers([newUser, ...users]);
-    axios
-      .post("https://jsonplaceholder.typicode.com/users", newUser)
-      .then((res) => {
-        // console.log(res);
-        setUsers([res.data, ...users]);
-      })
-      .catch((err) => {
-        setErrors(err.message);
-        setUsers(users);
-      });
+    // setUsers([newUser, ...users]);
+    // axios
+    //   .post("https://jsonplaceholder.typicode.com/users", newUser)
+    //   .then((res) => {
+    //     // console.log(res);
+    //     setUsers([res.data, ...users]);
+    //   })
+    //   .catch((err) => {
+    //     setErrors(err.message);
+    //     setUsers(users);
+    //   });
+    addUserMutation.mutate(newUser);
   };
 
   // Delete method

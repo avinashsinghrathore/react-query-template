@@ -14,14 +14,12 @@ const Users = () => {
   return (
     <>
       <h3>Todos Users page with pagination logics</h3>
-
       {isLoading && <h3>Loading...</h3>}
       {error && <em>{error.message}</em>}
       {todos?.map((todo) => (
         <p key={todo.id}>{todo.title}</p>
       ))}
-
-      // this code inside div will add page number buttons
+      {/* this code inside div will add page number buttons */}
       <div>
         {Array.from({ length: totalPage }, (_, i) => (
           <button
