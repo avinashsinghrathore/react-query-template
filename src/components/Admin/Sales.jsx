@@ -10,6 +10,7 @@ import useUsers from "../../hooks/useUsers";
 
 const Sales = () => {
   const { data: users, error, isLoading } = useUsers();
+  const [name, setName] = useState("");
   const QueryClient = useQueryClient();
 
   // how useMutation hooks works
@@ -21,7 +22,6 @@ const Sales = () => {
         .then((res) => res.data),
     onSuccess: (saveduser) => {
       console.log(saveduser);
-
       //1st cache invalid
       // QueryClient.invalidateQueris({
       //   queryKey: ["users"],
@@ -31,36 +31,30 @@ const Sales = () => {
     },
   });
 
-  const [name, setName] = useState("");
-
-  // post method
+  // post method - useMutation
   const addUser = () => {
     const newUser = { name, id: users.length + 1 };
-
-    // console.log(newUser);
-    // setUsers([newUser, ...users]);
-    // axios
-    //   .post("https://jsonplaceholder.typicode.com/users", newUser)
-    //   .then((res) => {
-    //     // console.log(res);
-    //     setUsers([res.data, ...users]);
-    //   })
-    //   .catch((err) => {
-    //     setErrors(err.message);
-    //     setUsers(users);
-    //   });
     addUserMutation.mutate(newUser);
   };
 
+  // delete method - ueMutation
+  const deleteUserMutation = useMutation({
+    mutationFn: (id) => {
+      axios
+        .delete(`https://jsonplaceholder.typicode.com/users/${id}`)
+        .then((res) => res.data);
+    },
+  });
+
   // Delete method
   const deleteUser = (id) => {
-    setUsers(users.filter((u) => u.id !== id));
-    axios
-      .delete("https://jsonplaceholder.typicode.com/users/${id}")
-      .catch((err) => {
-        setErrors(err.message);
-        setUsers(users);
-      });
+    deleteUserMutation.mutate(id, {
+      onSuccess: () => {
+        QueryClient.setQueriesData(["users"], (users) =>
+          users.filter((u) => u.id != id),
+        );
+      },
+    });
   };
 
   // Patch method
